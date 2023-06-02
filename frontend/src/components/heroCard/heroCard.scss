@@ -1,0 +1,51 @@
+.hero-card {
+  box-sizing: border-box;
+  position: relative;
+  height: 250px;
+  width: 180px;
+  border-radius: 15px;
+  border: 1px solid azure;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.hero-card:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.card-image {
+  width: 100%;
+  object-fit: cover;
+  height: 100%;
+}
+
+.card-text {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 0 5px;
+
+
+  &_title {
+    color: black;
+    font-weight: bold;
+    z-index: 3;
+  }
+}
+
+.card-text:before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 5px;
+}
+

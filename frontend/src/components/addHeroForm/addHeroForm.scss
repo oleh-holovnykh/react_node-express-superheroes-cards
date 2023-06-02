@@ -1,0 +1,19 @@
+.add-form-container {
+  padding: 50px;
+  width: 400px;
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+
+  &_field {
+    width: 100%;
+    margin-bottom: 30px !important;
+  }
+}
+
+.file-input {
+  cursor: pointer;
+  margin-bottom: 20px;
+}
