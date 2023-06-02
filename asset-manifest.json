@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/react_node-express-superheroes-cards/static/css/main.c4286b3a.chunk.css",
+    "main.js": "/react_node-express-superheroes-cards/static/js/main.21b2f5b3.chunk.js",
+    "main.js.map": "/react_node-express-superheroes-cards/static/js/main.21b2f5b3.chunk.js.map",
+    "runtime-main.js": "/react_node-express-superheroes-cards/static/js/runtime-main.dd79f9ee.js",
+    "runtime-main.js.map": "/react_node-express-superheroes-cards/static/js/runtime-main.dd79f9ee.js.map",
+    "static/css/2.7bfc45f5.chunk.css": "/react_node-express-superheroes-cards/static/css/2.7bfc45f5.chunk.css",
+    "static/js/2.16ca3ce7.chunk.js": "/react_node-express-superheroes-cards/static/js/2.16ca3ce7.chunk.js",
+    "static/js/2.16ca3ce7.chunk.js.map": "/react_node-express-superheroes-cards/static/js/2.16ca3ce7.chunk.js.map",
+    "index.html": "/react_node-express-superheroes-cards/index.html",
+    "static/css/2.7bfc45f5.chunk.css.map": "/react_node-express-superheroes-cards/static/css/2.7bfc45f5.chunk.css.map",
+    "static/css/main.c4286b3a.chunk.css.map": "/react_node-express-superheroes-cards/static/css/main.c4286b3a.chunk.css.map",
+    "static/js/2.16ca3ce7.chunk.js.LICENSE.txt": "/react_node-express-superheroes-cards/static/js/2.16ca3ce7.chunk.js.LICENSE.txt",
+    "static/media/App.scss": "/react_node-express-superheroes-cards/static/media/comics_wallpaper.5c7b6d3f.jpg",
+    "static/media/700.css": "/react_node-express-superheroes-cards/static/media/roboto-vietnamese-700-normal.4df79f68.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.dd79f9ee.js",
+    "static/css/2.7bfc45f5.chunk.css",
+    "static/js/2.16ca3ce7.chunk.js",
+    "static/css/main.c4286b3a.chunk.css",
+    "static/js/main.21b2f5b3.chunk.js"
+  ]
+}
