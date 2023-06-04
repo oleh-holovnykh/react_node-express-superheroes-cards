@@ -41,9 +41,8 @@ export const HeroList: React.FC<Props> = ({ heroes, handleModalOpen }) => {
         />
       </div>
       {pageCount >= 2 && (
-        <div className="pagination-wrapper">
+        <div className="pagination-background">
           <Pagination
-            className="pagination"
             count={pageCount}
             page={currentPage}
             onChange={handlePageChange}

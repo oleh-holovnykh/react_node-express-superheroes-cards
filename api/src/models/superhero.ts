@@ -49,7 +49,4 @@ export class Superhero extends Model {
     field: 'images_urls',
   })
   imagesURLs!: string[];
-
-  // @HasMany(() => Image)
-  // images?: Image[];
 }

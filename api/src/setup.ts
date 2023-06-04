@@ -5,6 +5,4 @@ import { dbInit } from "./utils/initDB";
   dbInit();
 
   await Superhero.sync({ alter: true });
-
-  console.log('synced!');
 })()

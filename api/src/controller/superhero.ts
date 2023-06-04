@@ -12,7 +12,7 @@ const heroController = {
     const { heroId } = req.params;
 
     if (isNaN(+heroId)) {
-      res.sendStatus(400);
+      res.status(400).send('Invalid hero ID. Please provide a vilid numeric ID.');
 
       return;
     }
@@ -20,7 +20,7 @@ const heroController = {
     const foundHero = await heroService.getById(+heroId);
 
     if (!foundHero) {
-      res.sendStatus(404);
+      res.status(404).send('Hero doesn\`t exist');
 
       return;
     }
@@ -32,14 +32,13 @@ const heroController = {
     const newHero = req.body;
 
     if (!newHero) {
-      res.sendStatus(400);
+      res.status(400).send('Data for the hero is not provided. Please provide the necessary data to create a new hero');
       return;
     }
 
     const hero = await heroService.addHero(newHero);
 
-    res.status(201);
-    res.send(hero);
+    res.status(201).send(hero);
   },
 
   removeHero: async (req: Request, res: Response) => {
@@ -48,13 +47,13 @@ const heroController = {
     const foundHero = await heroService.getById(+heroId);
 
     if (!foundHero) {
-      res.sendStatus(404);
+      res.status(404).send('Hero doesn\`t exist');
 
       return;
     }
 
     await heroService.removeHero(+heroId);
-    res.sendStatus(204);
+    res.status(204).send('Hero successfully deleted');
   },
 
   updateHero: async (req: Request, res: Response) => {
@@ -62,11 +61,10 @@ const heroController = {
     const newValues = req.body;
 
     if (!heroId || !newValues) {
-      res.sendStatus(400);
+      res.status(400).send('Make sure you have provided the hero identifier and the data for updating.');
 
       return;
     }
-    console.log('controler', newValues);
 
     const updatedHero = await heroService.updateHero(+heroId, newValues);
     res.send(updatedHero);

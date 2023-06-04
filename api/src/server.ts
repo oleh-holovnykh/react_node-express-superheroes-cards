@@ -7,8 +7,7 @@ const app = express();
 
 dbInit();
 
-app.use(cors());
-
-app.use('/heroes', express.json(), heroRouter);
-
-app.listen(5500);
+app
+  .use(cors())
+  .use('/heroes', express.json(), heroRouter)
+  .listen(5500);

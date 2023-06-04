@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.scss';
+import { CircularProgress } from '@mui/material';
 import { AddHeroForm } from './components/addHeroForm/addHeroForm';
 import { HeroData } from './types/hero';
 import { client } from './utils/fetchClient';
@@ -11,10 +12,18 @@ export const App: React.FC = () => {
   const [heroes, setHeroes] = useState<HeroData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalHero, setModalHero] = useState<HeroData | null>(null);
+  const [isLoading, setIsloading] = useState<boolean>(false);
   const fetchHeroes = async () => {
-    const allHeroes = await client.get('/');
+    setIsloading(true);
+    try {
+      const allHeroes = await client.get('/');
 
-    setHeroes(allHeroes);
+      setHeroes(allHeroes);
+    } catch (e) {
+      throw new Error('Cant get any heroes :(');
+    } finally {
+      setIsloading(false);
+    }
   };
 
   useEffect(() => {
@@ -42,29 +51,34 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="starter app-container">
-      <HeroList
-        heroes={heroes}
-        handleModalOpen={handleModalOpen}
-      />
+    <div className="app-container">
+      {!isLoading && (
+        <>
+          <HeroList
+            heroes={heroes}
+            handleModalOpen={handleModalOpen}
+          />
 
-      <CustomModal
-        isOpen={isModalOpen}
-        handleClose={handleModalClose}
-      >
-        {modalHero ? (
-          <HeroInfo
-            hero={modalHero!}
-            onDataUpdate={fetchHeroes}
-            onModalClose={handleModalClose}
-          />
-        ) : (
-          <AddHeroForm
-            onDataUpdate={fetchHeroes}
-            onModalClose={handleModalClose}
-          />
-        )}
-      </CustomModal>
+          <CustomModal
+            isOpen={isModalOpen}
+            handleClose={handleModalClose}
+          >
+            {modalHero ? (
+              <HeroInfo
+                hero={modalHero!}
+                onDataUpdate={fetchHeroes}
+                onModalClose={handleModalClose}
+              />
+            ) : (
+              <AddHeroForm
+                onDataUpdate={fetchHeroes}
+                onModalClose={handleModalClose}
+              />
+            )}
+          </CustomModal>
+        </>
+      )}
+      {isLoading && <CircularProgress color="primary" />}
     </div>
   );
 };

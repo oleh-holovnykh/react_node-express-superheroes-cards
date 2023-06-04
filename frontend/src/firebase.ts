@@ -16,22 +16,19 @@ const app = initializeApp(firebaseConfig);
 
 const storage = getStorage(app);
 
-// eslint-disable-next-line no-console
-console.log('storage', storage);
-
 export const uploadImage = async (heroNickName: string, image: File) => {
   const imageRef = ref(storage, `${heroNickName}/${image.name}`);
 
   await uploadBytes(imageRef, image);
 };
 
-export const getImageURL = async (imageName: string) => {
-  const imageRef = ref(storage, imageName);
-
-  const url = await getDownloadURL(imageRef);
-
-  return url;
-};
+// export const getImageURL = async (imageName: string) => {
+//   const imageRef = ref(storage, imageName);
+//
+//   const url = await getDownloadURL(imageRef);
+//
+//   return url;
+// };
 
 export const getAllImagesURLs = async (imagesPaths: string[]) => {
   const urls = await Promise.all(imagesPaths.map(async imagePath => {
@@ -61,4 +58,19 @@ export const getAllPathsFromDirectory = async (directory: string) => {
   const paths = result.items.map(item => item.fullPath);
 
   return paths;
+};
+
+export const deleteDirectory = async (directory: string) => {
+  const directoryRef = ref(storage, `${directory}/`);
+
+  try {
+    const result = await listAll(directoryRef);
+
+    await Promise.all(result.items.map(item => deleteObject(item)
+      .catch(error => {
+        throw new Error(`Can't delete photo. Error:${error.message}`);
+      })));
+  } catch (e: any) {
+    throw new Error(`Can't delete images folder: ${e.message}`);
+  }
 };

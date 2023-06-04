@@ -2,7 +2,8 @@
 
 import { HeroData } from '../types/hero';
 
-const BASE_URL = 'http://localhost:5500/heroes';
+const RENDER_URL = 'https://superheroes-18i0.onrender.com/heroes';
+// const LOCAL_URL = 'http://localhost:5500/heroes/';
 
 type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
@@ -20,12 +21,11 @@ function request<T>(
     };
   }
 
-  return fetch(BASE_URL + url, options).then(response => {
-    return response.json();
-  }).catch((error) => `some error ${error.message}`);
+  return fetch(RENDER_URL + url, options)
+    .then(response => response.json())
+    .catch((error) => `some error ${error.message}`);
 }
 
-// type PostResponse = [HeroData, boolean];
 export const client = {
   get: (url: string) => request<HeroData[]>(url),
   post: <T>(url: string, data: any) => request<T>(url, 'POST', data),

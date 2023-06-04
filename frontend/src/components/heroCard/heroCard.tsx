@@ -25,14 +25,13 @@ export const HeroCard: React.FC<Props> = React.memo(({
     }}
   >
     <img
-      className="card-image"
+      className="card-image hero-card_image"
       src={imageURL}
       alt={`${heroNickName}`}
     />
-    <div className="card-text">
-      <span className="card-text_title">
-        {heroNickName}
-      </span>
-    </div>
+
+    <span className="hero-card_title">
+      {heroNickName}
+    </span>
   </div>
 ));

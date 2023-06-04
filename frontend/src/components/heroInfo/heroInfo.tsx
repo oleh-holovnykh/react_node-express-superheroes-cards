@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+/* eslint-disable no-console */
+import React, { ChangeEvent, useState } from 'react';
 import {
-  Box, Button, CircularProgress, Modal, TextField,
+  Button, CircularProgress, Modal, TextField,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
@@ -8,11 +9,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { HeroData } from '../../types/hero';
 import './heroInfo.scss';
 import { client } from '../../utils/fetchClient';
-import { deleteImage } from '../../firebase';
+import {
+  deleteDirectory, deleteImage, getAllImagesURLs, getAllPathsFromDirectory, uploadImage,
+} from '../../firebase';
+import addImage from '../../images/add-image.svg';
 
 interface Props {
   hero: HeroData;
-  onDataUpdate: () => void;
+  onDataUpdate: () => Promise<void>;
   onModalClose: () => void;
 }
 export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) => {
@@ -36,6 +40,40 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
   const [showEditForm, setShowEditForm] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isImageLoading, setIsImageLoading] = useState<string[]>([]);
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) {
+      return;
+    }
+
+    setIsImageLoading(state => [...state, 'add new photo\'s']);
+
+    const files = [...event.target.files];
+
+    await Promise.all(files.map(async (file) => {
+      try {
+        await uploadImage(nickname, file);
+      } catch (e: any) {
+        throw new Error(`Can't upload image: ${e.message}`);
+      }
+    }));
+
+    try {
+      const imagesPaths = await getAllPathsFromDirectory(nickname);
+      const imagesPathsWithURLs = await getAllImagesURLs(imagesPaths);
+
+      await client.patch(`/${id}`, { imagesURLs: imagesPathsWithURLs });
+
+      setPhotoURLs(imagesPathsWithURLs);
+
+      await onDataUpdate();
+    } catch (e: any) {
+      throw new Error(`Can't upload new photos: ${e.message}`);
+    }
+
+    setIsImageLoading(state => state.filter(img => img !== 'add new photo\'s'));
+  };
+
   const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -49,8 +87,14 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
       catchPhrase: phrase,
     };
 
-    await client.patch(`/${id}`, newHeroInfo);
-    await onDataUpdate();
+    try {
+      await client.patch(`/${id}`, newHeroInfo);
+
+      await onDataUpdate();
+    } catch (e:any) {
+      throw new Error(`Can't update hero information: ${e.message}`);
+    }
+
     setIsLoading(false);
     setShowEditForm(false);
   };
@@ -75,34 +119,47 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
   const handleDeleteHero = async () => {
     setIsLoading(true);
 
-    await client.delete(`/${id}`);
-    await onDataUpdate();
-    onModalClose();
+    try {
+      await deleteDirectory(`${nickname}/`);
 
+      await client.delete(`/${id}`);
+
+      await onDataUpdate();
+    } catch (e: any) {
+      throw new Error(`I was unable to delete the hero. Something went wrong: ${e.message}`);
+    }
+
+    onModalClose();
     setIsLoading(false);
   };
 
   const handleDeletePhoto = async (imgPath: string) => {
-    setIsImageLoading(prevState => [...prevState, imgPath]);
+    setIsImageLoading(state => [...state, imgPath]);
 
-    await deleteImage(imgPath);
+    try {
+      await deleteImage(imgPath);
 
-    const newimagesURLs = imagesURLs.filter(imageURL => imageURL[0] !== imgPath);
+      const newImagesURLs = imagesURLs.filter(imageURL => imageURL[0] !== imgPath);
 
-    await client.patch(`/${id}`, { imagesURLs: newimagesURLs });
-    await onDataUpdate();
+      setPhotoURLs(newImagesURLs);
 
-    setPhotoURLs(newimagesURLs);
-    setIsImageLoading(prevState => prevState.filter(element => element !== imgPath));
+      await client.patch(`/${id}`, { imagesURLs: newImagesURLs });
+
+      await onDataUpdate();
+    } catch (e:any) {
+      throw new Error(`Something went wrong: ${e.message}`);
+    }
+
+    setIsImageLoading(state => state.filter(element => element !== imgPath));
   };
 
   return (
     <div className="info-container">
-      <div className="info-container_main-info">
-        <div className="info-container_main-photo">
-          <img className="main-img" src={imagesURLs[0][1]} alt={nickname} />
+      <div className="info-container_main">
+        <div className="info-container_main_photo">
+          <img className="info-container_main_photo_img" src={imagesURLs[0][1]} alt={nickname} />
         </div>
-        <div className="info-container_hero-info">
+        <div className="info-container_main_info">
           {showEditForm
             ? (
               <form onSubmit={handleUpdate}>
@@ -208,99 +265,132 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
             )
             : (
               <>
-                <p>
+                <span>
                   <strong>
                     {'Nickname: '}
                   </strong>
                   {nick}
-                </p>
-                <p>
+                </span>
+                <span>
                   <strong>
                     {'Real name: '}
                   </strong>
                   {name}
-                </p>
-                <p>
+                </span>
+                <span>
                   <strong>
                     {'Origin: '}
                   </strong>
                   {origin}
-                </p>
-                <p>
+                </span>
+                <span>
                   <strong>
                     {'Superpowers: '}
                   </strong>
                   {powers}
-                </p>
-                <p>
+                </span>
+                <span>
                   <strong>
                     {'Catch phrase: '}
                   </strong>
                   {phrase}
-                </p>
+                </span>
               </>
             )}
         </div>
       </div>
-      <strong>Galery:</strong>
-      <div className="info-container_photo-gallery">
-        {photoURLs.map((imageUrl, i) => {
-          const isThisImageLoading = isImageLoading.includes(imageUrl[0]);
+      <div className="info-container_gallery">
+        <strong className="info-container_gallery_title">Gallery:</strong>
+        <div className="info-container_gallery_photos">
+          {photoURLs.map((imageUrl, i) => {
+            const isThisImageLoading = isImageLoading.includes(imageUrl[0]);
 
-          return (
-            <div
-              key={imageUrl[0]}
-              role="button"
-              tabIndex={0}
-              className="img-container"
-              onClick={() => {
-                handleImageClick(imageUrl[1]);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+            return (
+              <div
+                key={imageUrl[0]}
+                role="button"
+                tabIndex={0}
+                className="info-container_gallery_photos_img-container"
+                onClick={() => {
                   handleImageClick(imageUrl[1]);
-                }
-              }}
-            >
-              <img
-                className="gallery-img"
-                src={imageUrl[1]}
-                alt={`${nickname} ${i}`}
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleImageClick(imageUrl[1]);
+                  }
+                }}
+              >
+                <img
+                  className="info-container_gallery_photos_img"
+                  src={imageUrl[1]}
+                  alt={`${nickname} ${i}`}
+                />
+
+                {showEditForm && (
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeletePhoto(imageUrl[0]);
+                    }}
+                    sx={{
+                      position: 'absolute',
+                      top: '5px',
+                      right: '2px',
+                    }}
+                    aria-label="delete"
+                    color="error"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                )}
+
+                {isThisImageLoading && (
+                  <CircularProgress
+                    style={{
+                      position: 'absolute' as const,
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                    color="error"
+                  />
+                )}
+              </div>
+            );
+          })}
+          {showEditForm && (
+            <label htmlFor="file-input" className="info-container_gallery_photos_img-container">
+              <input
+                id="file-input"
+                type="file"
+                multiple
+                onChange={handleFileChange}
+                className="file-input"
               />
-
-              {showEditForm && (
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeletePhoto(imageUrl[0]);
-                  }}
-                  sx={{
-                    position: 'absolute',
-                    top: '5px',
-                    right: '2px',
-                  }}
-                  aria-label="delete"
-                  color="error"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              )}
-
-              {isThisImageLoading && (
-                <CircularProgress
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    right: '50%',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                  color="error"
+              {!isImageLoading.includes('add new photo\'s') && (
+                <img
+                  className="info-container_gallery_photos_img"
+                  src={addImage}
+                  alt="plus button"
                 />
               )}
-            </div>
-          );
-        })}
+
+              {isImageLoading.includes('add new photo\'s') && (
+                <CircularProgress
+                  style={{
+                    position: 'absolute' as const,
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                  color="primary"
+                />
+              )}
+            </label>
+          )}
+        </div>
       </div>
+
       {!showEditForm && (
         <IconButton
           sx={{
@@ -321,14 +411,8 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
       >
-        <div className="modal-content">
-          <Box sx={{
-            width: '700px',
-            height: '600px',
-          }}
-          >
-            <img className="modal-image" src={selectedImage} alt="Selected" />
-          </Box>
+        <div className="modal-photo">
+          <img className="modal-photo_image" src={selectedImage} alt="Selected" />
         </div>
       </Modal>
     </div>

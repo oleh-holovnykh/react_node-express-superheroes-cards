@@ -1,6 +1,4 @@
-import React, {
-  ChangeEvent, useRef, useState,
-} from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { Button, CircularProgress, TextField } from '@mui/material';
 import './addHeroForm.scss';
 import { client } from '../../utils/fetchClient';
@@ -8,9 +6,10 @@ import { getAllImagesURLs, getAllPathsFromDirectory, uploadImage } from '../../f
 import { HeroData } from '../../types/hero';
 
 interface Props {
-  onDataUpdate: () => void;
+  onDataUpdate: () => Promise<void>;
   onModalClose: () => void;
 }
+
 export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => {
   const [nickname, setNickname] = useState('');
   const [realName, setRealName] = useState('');
@@ -54,19 +53,31 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
       const files = [...fileList];
 
       await Promise.all(files.map(async (file) => {
-        await uploadImage(nickname, file);
+        try {
+          await uploadImage(nickname, file);
+        } catch (e:any) {
+          throw new Error(`Can't upload image: ${e.message}. Try again later`);
+        }
       }));
     }
 
-    const imagesPaths = await getAllPathsFromDirectory(nickname);
+    try {
+      const imagesPaths = await getAllPathsFromDirectory(nickname);
 
-    newHero.imagesURLs = await getAllImagesURLs(imagesPaths);
+      newHero.imagesURLs = await getAllImagesURLs(imagesPaths);
+    } catch (e: any) {
+      throw new Error(`Can't get images URLs from storage: ${e.message}. Try again later`);
+    }
 
     if (filesInput.current && filesInput.current.value) {
       filesInput.current.value = '';
     }
 
-    await client.post('/', newHero);
+    try {
+      await client.post('/', newHero);
+    } catch (e: any) {
+      throw new Error(`Can't add hero: ${e.message}. Try it later`);
+    }
 
     setFileList(null);
     onDataUpdate();
@@ -76,73 +87,69 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
 
   return (
     <div className="add-form-container">
-      <form action="submit" className="add-form" onSubmit={handleFormSubmit}>
-        <TextField
-          className="add-form_field"
-          id="outlined-basic"
-          label="Nickname"
-          variant="outlined"
-          value={nickname}
-          size="small"
-          onChange={(e) => setNickname(e.target.value)}
-        />
+      <form className="add-form" onSubmit={handleFormSubmit}>
+        {!isLoading ? (
+          <>
+            <TextField
+              className="add-form_field"
+              id="outlined-basic"
+              label="Nickname"
+              variant="outlined"
+              value={nickname}
+              size="small"
+              onChange={(e) => setNickname(e.target.value)}
+            />
 
-        <TextField
-          className="add-form_field"
-          id="outlined-basic"
-          label="Real name"
-          variant="outlined"
-          value={realName}
-          size="small"
-          onChange={(e) => setRealName(e.target.value)}
-        />
+            <TextField
+              className="add-form_field"
+              id="outlined-basic"
+              label="Real name"
+              variant="outlined"
+              value={realName}
+              size="small"
+              onChange={(e) => setRealName(e.target.value)}
+            />
 
-        <TextField
-          className="add-form_field"
-          id="outlined-multiline-flexible"
-          label="Origin description"
-          multiline
-          maxRows={4}
-          defaultValue="Origin description"
-          value={originDescription}
-          size="small"
-          onChange={(e) => setOriginDescription(e.target.value)}
-        />
+            <TextField
+              className="add-form_field"
+              id="outlined-multiline-flexible"
+              label="Origin description"
+              multiline
+              maxRows={4}
+              value={originDescription}
+              size="small"
+              onChange={(e) => setOriginDescription(e.target.value)}
+            />
 
-        <TextField
-          className="add-form_field"
-          id="outlined-multiline-flexible"
-          label="Superpowers"
-          multiline
-          maxRows={4}
-          defaultValue="Superpowers"
-          value={superpowers}
-          size="small"
-          onChange={(e) => setSuperpowers(e.target.value)}
-        />
+            <TextField
+              className="add-form_field"
+              id="outlined-multiline-flexible"
+              label="Superpowers"
+              multiline
+              maxRows={4}
+              value={superpowers}
+              size="small"
+              onChange={(e) => setSuperpowers(e.target.value)}
+            />
 
-        <TextField
-          className="add-form_field"
-          id="outlined-multiline-flexible"
-          label="Catch phrase"
-          multiline
-          maxRows={4}
-          defaultValue="Catch phrase"
-          value={catchPhrase}
-          size="small"
-          onChange={(e) => setCatchPhrase(e.target.value)}
-        />
+            <TextField
+              className="add-form_field"
+              id="outlined-multiline-flexible"
+              label="Catch phrase"
+              multiline
+              maxRows={4}
+              value={catchPhrase}
+              size="small"
+              onChange={(e) => setCatchPhrase(e.target.value)}
+            />
 
-        <input
-          type="file"
-          multiple
-          onChange={handleFileChange}
-          ref={filesInput}
-          className="file-input"
-        />
-
-        {!isLoading
-          ? (
+            <input
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              ref={filesInput}
+              className="file-input"
+            />
             <Button
               className="add-form_button"
               type="submit"
@@ -152,8 +159,10 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
             >
               Add Hero
             </Button>
-          )
-          : <CircularProgress color="success" />}
+          </>
+        ) : (
+          <CircularProgress color="success" />
+        )}
       </form>
     </div>
   );
