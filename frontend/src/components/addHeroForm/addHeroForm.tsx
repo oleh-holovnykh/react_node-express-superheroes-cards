@@ -1,16 +1,17 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
 import { Button, CircularProgress, TextField } from '@mui/material';
 import './addHeroForm.scss';
+import { toast } from 'react-toastify';
 import { client } from '../../utils/fetchClient';
 import { getAllImagesURLs, getAllPathsFromDirectory, uploadImage } from '../../firebase';
 import { HeroData } from '../../types/hero';
 
 interface Props {
-  onDataUpdate: () => Promise<void>;
   onModalClose: () => void;
+  onDataUpdate: () => Promise<void>;
 }
 
-export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => {
+export const AddHeroForm: React.FC<Props> = ({ onModalClose, onDataUpdate }) => {
   const [nickname, setNickname] = useState('');
   const [realName, setRealName] = useState('');
   const [originDescription, setOriginDescription] = useState('');
@@ -75,13 +76,14 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
 
     try {
       await client.post('/', newHero);
+      await onDataUpdate();
     } catch (e: any) {
       throw new Error(`Can't add hero: ${e.message}. Try it later`);
     }
 
     setFileList(null);
-    onDataUpdate();
     setIsLoading(false);
+    toast.success(`${newHero.nickname} was added`);
     onModalClose();
   };
 
@@ -98,6 +100,7 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
               value={nickname}
               size="small"
               onChange={(e) => setNickname(e.target.value)}
+              disabled={isLoading}
             />
 
             <TextField
@@ -108,6 +111,7 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
               value={realName}
               size="small"
               onChange={(e) => setRealName(e.target.value)}
+              disabled={isLoading}
             />
 
             <TextField
@@ -119,6 +123,7 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
               value={originDescription}
               size="small"
               onChange={(e) => setOriginDescription(e.target.value)}
+              disabled={isLoading}
             />
 
             <TextField
@@ -130,6 +135,7 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
               value={superpowers}
               size="small"
               onChange={(e) => setSuperpowers(e.target.value)}
+              disabled={isLoading}
             />
 
             <TextField
@@ -141,6 +147,7 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
               value={catchPhrase}
               size="small"
               onChange={(e) => setCatchPhrase(e.target.value)}
+              disabled={isLoading}
             />
 
             <input
@@ -149,6 +156,7 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
               onChange={handleFileChange}
               ref={filesInput}
               className="file-input"
+              disabled={isLoading}
             />
             <Button
               className="add-form_button"
@@ -161,7 +169,12 @@ export const AddHeroForm: React.FC<Props> = ({ onDataUpdate, onModalClose }) => 
             </Button>
           </>
         ) : (
-          <CircularProgress color="success" />
+          <CircularProgress
+            sx={{
+              margin: 'auto',
+            }}
+            color="success"
+          />
         )}
       </form>
     </div>

@@ -6,6 +6,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { toast } from 'react-toastify';
 import { HeroData } from '../../types/hero';
 import './heroInfo.scss';
 import { client } from '../../utils/fetchClient';
@@ -16,10 +17,10 @@ import addImage from '../../images/add-image.svg';
 
 interface Props {
   hero: HeroData;
-  onDataUpdate: () => Promise<void>;
   onModalClose: () => void;
+  onDataUpdate: () => Promise<void>
 }
-export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) => {
+export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDataUpdate }) => {
   const {
     id,
     nickname,
@@ -41,7 +42,9 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isImageLoading, setIsImageLoading] = useState<string[]>([]);
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFilesUploadOnChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+
     if (!event.target.files) {
       return;
     }
@@ -64,9 +67,9 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
 
       await client.patch(`/${id}`, { imagesURLs: imagesPathsWithURLs });
 
-      setPhotoURLs(imagesPathsWithURLs);
-
       await onDataUpdate();
+
+      setPhotoURLs(imagesPathsWithURLs);
     } catch (e: any) {
       throw new Error(`Can't upload new photos: ${e.message}`);
     }
@@ -89,8 +92,6 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
 
     try {
       await client.patch(`/${id}`, newHeroInfo);
-
-      await onDataUpdate();
     } catch (e:any) {
       throw new Error(`Can't update hero information: ${e.message}`);
     }
@@ -129,6 +130,7 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
       throw new Error(`I was unable to delete the hero. Something went wrong: ${e.message}`);
     }
 
+    toast.success('Hero was deleted');
     onModalClose();
     setIsLoading(false);
   };
@@ -139,7 +141,7 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
     try {
       await deleteImage(imgPath);
 
-      const newImagesURLs = imagesURLs.filter(imageURL => imageURL[0] !== imgPath);
+      const newImagesURLs = photoURLs.filter(imageURL => imageURL[0] !== imgPath);
 
       setPhotoURLs(newImagesURLs);
 
@@ -364,7 +366,7 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
                 id="file-input"
                 type="file"
                 multiple
-                onChange={handleFileChange}
+                onChange={handleFilesUploadOnChange}
                 className="file-input"
               />
               {!isImageLoading.includes('add new photo\'s') && (
@@ -417,4 +419,4 @@ export const HeroInfo: React.FC<Props> = ({ hero, onDataUpdate, onModalClose }) 
       </Modal>
     </div>
   );
-};
+});

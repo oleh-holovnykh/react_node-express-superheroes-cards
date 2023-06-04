@@ -14,16 +14,19 @@ export const App: React.FC = () => {
   const [modalHero, setModalHero] = useState<HeroData | null>(null);
   const [isLoading, setIsloading] = useState<boolean>(false);
   const fetchHeroes = async () => {
-    setIsloading(true);
+    if (!isModalOpen) {
+      setIsloading(true);
+    }
+
     try {
       const allHeroes = await client.get('/');
 
       setHeroes(allHeroes);
     } catch (e) {
       throw new Error('Cant get any heroes :(');
-    } finally {
-      setIsloading(false);
     }
+
+    setIsloading(false);
   };
 
   useEffect(() => {
@@ -66,8 +69,8 @@ export const App: React.FC = () => {
             {modalHero ? (
               <HeroInfo
                 hero={modalHero!}
-                onDataUpdate={fetchHeroes}
                 onModalClose={handleModalClose}
+                onDataUpdate={fetchHeroes}
               />
             ) : (
               <AddHeroForm
