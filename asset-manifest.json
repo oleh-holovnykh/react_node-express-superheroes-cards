@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/react_node-superheroes/static/css/main.27dfbe66.chunk.css",
-    "main.js": "/react_node-superheroes/static/js/main.2eb05984.chunk.js",
-    "main.js.map": "/react_node-superheroes/static/js/main.2eb05984.chunk.js.map",
+    "main.css": "/react_node-superheroes/static/css/main.392730bf.chunk.css",
+    "main.js": "/react_node-superheroes/static/js/main.29659b1d.chunk.js",
+    "main.js.map": "/react_node-superheroes/static/js/main.29659b1d.chunk.js.map",
     "runtime-main.js": "/react_node-superheroes/static/js/runtime-main.cbf2ddab.js",
     "runtime-main.js.map": "/react_node-superheroes/static/js/runtime-main.cbf2ddab.js.map",
-    "static/css/2.66cbc4d4.chunk.css": "/react_node-superheroes/static/css/2.66cbc4d4.chunk.css",
-    "static/js/2.192b773b.chunk.js": "/react_node-superheroes/static/js/2.192b773b.chunk.js",
-    "static/js/2.192b773b.chunk.js.map": "/react_node-superheroes/static/js/2.192b773b.chunk.js.map",
+    "static/css/2.f4c56af9.chunk.css": "/react_node-superheroes/static/css/2.f4c56af9.chunk.css",
+    "static/js/2.2bc44e63.chunk.js": "/react_node-superheroes/static/js/2.2bc44e63.chunk.js",
+    "static/js/2.2bc44e63.chunk.js.map": "/react_node-superheroes/static/js/2.2bc44e63.chunk.js.map",
     "index.html": "/react_node-superheroes/index.html",
-    "static/css/2.66cbc4d4.chunk.css.map": "/react_node-superheroes/static/css/2.66cbc4d4.chunk.css.map",
-    "static/css/main.27dfbe66.chunk.css.map": "/react_node-superheroes/static/css/main.27dfbe66.chunk.css.map",
-    "static/js/2.192b773b.chunk.js.LICENSE.txt": "/react_node-superheroes/static/js/2.192b773b.chunk.js.LICENSE.txt",
+    "static/css/2.f4c56af9.chunk.css.map": "/react_node-superheroes/static/css/2.f4c56af9.chunk.css.map",
+    "static/css/main.392730bf.chunk.css.map": "/react_node-superheroes/static/css/main.392730bf.chunk.css.map",
+    "static/js/2.2bc44e63.chunk.js.LICENSE.txt": "/react_node-superheroes/static/js/2.2bc44e63.chunk.js.LICENSE.txt",
     "static/media/add-image.9133d22b.svg": "/react_node-superheroes/static/media/add-image.9133d22b.svg",
-    "static/media/App.scss": "/react_node-superheroes/static/media/comics_wallpaper.5c7b6d3f.jpg"
+    "static/media/App.module.scss": "/react_node-superheroes/static/media/comics_wallpaper.5c7b6d3f.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.cbf2ddab.js",
-    "static/css/2.66cbc4d4.chunk.css",
-    "static/js/2.192b773b.chunk.js",
-    "static/css/main.27dfbe66.chunk.css",
-    "static/js/main.2eb05984.chunk.js"
+    "static/css/2.f4c56af9.chunk.css",
+    "static/js/2.2bc44e63.chunk.js",
+    "static/css/main.392730bf.chunk.css",
+    "static/js/main.29659b1d.chunk.js"
   ]
 }
