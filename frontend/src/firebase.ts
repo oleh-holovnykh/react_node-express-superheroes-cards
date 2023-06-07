@@ -22,14 +22,6 @@ export const uploadImage = async (heroNickName: string, image: File) => {
   await uploadBytes(imageRef, image);
 };
 
-// export const getImageURL = async (imageName: string) => {
-//   const imageRef = ref(storage, imageName);
-//
-//   const url = await getDownloadURL(imageRef);
-//
-//   return url;
-// };
-
 export const getAllImagesURLs = async (imagesPaths: string[]) => {
   const urls = await Promise.all(imagesPaths.map(async imagePath => {
     const imageRef = ref(storage, imagePath);

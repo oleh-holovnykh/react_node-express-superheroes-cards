@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { HeroData } from '../types/hero';
+import { HeroData } from 'types/hero';
 
-const RENDER_URL = 'https://superheroes-18i0.onrender.com/heroes';
-// const LOCAL_URL = 'http://localhost:5500/heroes/';
+const PRODUCTION_URL = 'https://superheroes-18i0.onrender.com/heroes';
+const LOCAL_URL = 'http://localhost:5500/heroes';
+
+const RENDER_URL = process.env.NODE_ENV === 'production' ? PRODUCTION_URL : LOCAL_URL;
 
 type RequestMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 

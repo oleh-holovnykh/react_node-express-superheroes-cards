@@ -20,6 +20,7 @@ This project is a web application that allows users to manage superhero cards. U
 ### Prerequisites
 
 Make sure you have Node.js installed on your local machine.
+!IMPORTANT: Use Node.js version 14 for package installation.
 
 ### Frontend Setup
 
@@ -38,12 +39,5 @@ Make sure you have Node.js installed on your local machine.
 ## Usage
 
 Once both the frontend and backend servers are running locally, you can access the web application by opening your web browser and entering the provided URL. From there, you can add, delete, and edit superhero cards to manage your collection.
-
-Please note that for the frontend to communicate with the backend, a modification needs to be made in the `frontend/src/utils/fetchClient.ts` file.
-
-1. Open the `frontend/src/utils/fetchClient.ts` file.
-2. Uncomment the line `// const LOCAL_URL = 'http://localhost:5500/heroes/';` by removing the `//` at the beginning.
-3. In the `fetch` function, replace `RENDER_URL` with `LOCAL_URL`.
-4. These changes will ensure that the frontend interacts with the local backend server.
 
 Feel free to explore the features and enjoy working with your superhero cards!

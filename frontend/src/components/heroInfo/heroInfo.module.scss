@@ -1,5 +1,6 @@
 .info-container {
   max-width: 600px;
+  min-widht: 600px;
   display: flex;
   flex-direction: column;
 
@@ -80,8 +81,18 @@
   justify-content: space-between;
 }
 
-#file-input {
+.file-input {
   opacity: 0;
   position: absolute;
   z-index: -1;
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+
+  &_field {
+    width: 100%;
+    margin-bottom: 30px !important;
+  }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import './heroCard.scss';
+import styles from './heroCard.module.scss';
 
 interface Props {
   heroNickName: string,
@@ -12,7 +12,7 @@ export const HeroCard: React.FC<Props> = React.memo(({
   handleModalOpen,
 }) => (
   <div
-    className="hero-card"
+    className={styles['hero-card']}
     role="button"
     tabIndex={0}
     onClick={() => {
@@ -25,12 +25,12 @@ export const HeroCard: React.FC<Props> = React.memo(({
     }}
   >
     <img
-      className="card-image hero-card_image"
+      className={styles['hero-card_image']}
       src={imageURL}
       alt={`${heroNickName}`}
     />
 
-    <span className="hero-card_title">
+    <span className={styles['hero-card_title']}>
       {heroNickName}
     </span>
   </div>

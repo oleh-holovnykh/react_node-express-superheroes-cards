@@ -1,7 +1,7 @@
 module.exports = {
   extends: [
     '@mate-academy/eslint-config-react-typescript',
-    'plugin:react/recommended',
+    'plugin:react/recommended'
   ],
   rules: {
     'linebreak-style': ['error', 'unix'],
@@ -26,4 +26,11 @@ module.exports = {
   plugins: [
     '@typescript-eslint',
   ],
+  settings: {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"]
+      }
+    }
+  },
 };

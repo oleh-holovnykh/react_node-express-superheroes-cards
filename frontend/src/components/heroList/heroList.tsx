@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Pagination } from '@mui/material';
-import { HeroData } from '../../types/hero';
-import { HeroCard } from '../heroCard';
-import './heroList.scss';
-import createNewImage from '../../images/addNew.png';
+import { HeroData } from 'types/hero';
+import createNewImage from 'images/addNew.png';
+import { HeroCard } from 'components/heroCard';
+import styles from './heroList.module.scss';
 
 interface Props {
   heroes: HeroData[];
@@ -24,8 +24,8 @@ export const HeroList: React.FC<Props> = ({ heroes, handleModalOpen }) => {
   const currentCards = heroes.slice(indexOfFirstCard, indexOfLastCard);
 
   return (
-    <div className="list-wrapper">
-      <div className="list-container">
+    <div className={styles['list-wrapper']}>
+      <div className={styles['list-container']}>
         {currentCards.map((hero) => (
           <HeroCard
             key={hero.id}
@@ -41,7 +41,7 @@ export const HeroList: React.FC<Props> = ({ heroes, handleModalOpen }) => {
         />
       </div>
       {pageCount >= 2 && (
-        <div className="pagination-background">
+        <div className={styles['pagination-background']}>
           <Pagination
             count={pageCount}
             page={currentPage}

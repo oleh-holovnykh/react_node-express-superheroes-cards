@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import './App.scss';
 import { CircularProgress } from '@mui/material';
-import { AddHeroForm } from './components/addHeroForm/addHeroForm';
-import { HeroData } from './types/hero';
-import { client } from './utils/fetchClient';
-import { HeroList } from './components/heroList';
-import { CustomModal } from './components/customModal';
-import { HeroInfo } from './components/heroInfo';
+import styles from 'App.module.scss';
+import { AddHeroForm } from 'components/addHeroForm/addHeroForm';
+import { HeroData } from 'types/hero';
+import { client } from 'utils/fetchClient';
+import { HeroList } from 'components/heroList';
+import { CustomModal } from 'components/customModal';
+import { HeroInfo } from 'components/heroInfo';
 
 export const App: React.FC = () => {
   const [heroes, setHeroes] = useState<HeroData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalHero, setModalHero] = useState<HeroData | null>(null);
-  const [isLoading, setIsloading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const fetchHeroes = async () => {
     if (!isModalOpen) {
-      setIsloading(true);
+      setIsLoading(true);
     }
 
     try {
@@ -26,7 +26,7 @@ export const App: React.FC = () => {
       throw new Error('Cant get any heroes :(');
     }
 
-    setIsloading(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="app-container">
+    <div className={styles['app-container']}>
       {!isLoading && (
         <>
           <HeroList

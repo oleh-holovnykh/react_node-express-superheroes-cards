@@ -16,6 +16,7 @@ const styles = {
   boxShadow: 24,
   p: 4,
   borderRadius: 4,
+  overflow: 'auto',
 };
 
 export const CustomModal: React.FC<Props> = ({ isOpen, handleClose, children }) => (

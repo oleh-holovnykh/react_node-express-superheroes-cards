@@ -1,9 +1,9 @@
-import { Model, Column, DataType, Table, HasMany, PrimaryKey, AllowNull, AutoIncrement } from 'sequelize-typescript';
+import { Model, Column, DataType, Table, PrimaryKey, AllowNull, AutoIncrement } from 'sequelize-typescript'
 
 @Table({
   tableName: 'superheroes',
   createdAt: false,
-  updatedAt: false,
+  updatedAt: false
 })
 
 export class Superhero extends Model {
@@ -11,42 +11,42 @@ export class Superhero extends Model {
   @AllowNull(false)
   @AutoIncrement
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.INTEGER
   })
-  id!: number;
+    id!: number
+
+  @Column({
+    type: DataType.STRING
+  })
+    nickname!: string
 
   @Column({
     type: DataType.STRING,
+    field: 'real_name'
   })
-  nickname!: string;
+    realName!: string
 
   @Column({
     type: DataType.STRING,
-    field: 'real_name',
+    field: 'origin_description'
   })
-  realName!: string;
+    originDescription!: string
+
+  @Column({
+    type: DataType.STRING
+  })
+    superpowers!: string
 
   @Column({
     type: DataType.STRING,
-    field: 'origin_description',
+    field: 'catch_phrase'
   })
-  originDescription!: string;
-
-  @Column({
-    type: DataType.STRING,
-  })
-  superpowers!: string;
-
-  @Column({
-    type: DataType.STRING,
-    field: 'catch_phrase',
-  })
-  catchPhrase!: string;
+    catchPhrase!: string
 
   @AllowNull(true)
   @Column({
     type: DataType.JSON,
-    field: 'images_urls',
+    field: 'images_urls'
   })
-  imagesURLs!: string[];
+    imagesURLs!: string[]
 }

@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { toast } from 'react-toastify';
 import { HeroData } from '../../types/hero';
-import './heroInfo.scss';
+import styles from './heroInfo.module.scss';
 import { client } from '../../utils/fetchClient';
 import {
   deleteDirectory, deleteImage, getAllImagesURLs, getAllPathsFromDirectory, uploadImage,
@@ -156,17 +156,17 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
   };
 
   return (
-    <div className="info-container">
-      <div className="info-container_main">
-        <div className="info-container_main_photo">
-          <img className="info-container_main_photo_img" src={imagesURLs[0][1]} alt={nickname} />
+    <div className={styles['info-container']}>
+      <div className={styles['info-container_main']}>
+        <div className={styles['info-container_main_photo']}>
+          <img className={styles['info-container_main_photo_img']} src={imagesURLs[0][1]} alt={nickname} />
         </div>
-        <div className="info-container_main_info">
+        <div className={styles['info-container_main_info']}>
           {showEditForm
             ? (
               <form onSubmit={handleUpdate}>
                 <TextField
-                  className="add-form_field"
+                  className={styles['add-form_field']}
                   id="outlined-basic"
                   label="Nickname"
                   variant="outlined"
@@ -177,7 +177,7 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
                 />
 
                 <TextField
-                  className="add-form_field"
+                  className={styles['add-form_field']}
                   id="outlined-basic"
                   label="Real name"
                   variant="outlined"
@@ -188,7 +188,7 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
                 />
 
                 <TextField
-                  className="add-form_field"
+                  className={styles['add-form_field']}
                   id="outlined-multiline-flexible"
                   label="Origin description"
                   multiline
@@ -201,7 +201,7 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
                 />
 
                 <TextField
-                  className="add-form_field"
+                  className={styles['add-form_field']}
                   id="outlined-multiline-flexible"
                   label="Superpowers"
                   multiline
@@ -214,7 +214,7 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
                 />
 
                 <TextField
-                  className="add-form_field"
+                  className={styles['add-form_field']}
                   id="outlined-multiline-flexible"
                   label="Catch phrase"
                   multiline
@@ -229,7 +229,7 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
                 {!isLoading
                   ? (
                     <>
-                      <div className="button-container">
+                      <div className={styles['button-container']}>
                         <div>
                           <Button
                             sx={{ marginRight: '20px' }}
@@ -301,9 +301,9 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
             )}
         </div>
       </div>
-      <div className="info-container_gallery">
-        <strong className="info-container_gallery_title">Gallery:</strong>
-        <div className="info-container_gallery_photos">
+      <div className={styles['info-container_gallery']}>
+        <strong className={styles['info-container_gallery_title']}>Gallery:</strong>
+        <div className={styles['info-container_gallery_photos']}>
           {photoURLs.map((imageUrl, i) => {
             const isThisImageLoading = isImageLoading.includes(imageUrl[0]);
 
@@ -312,7 +312,7 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
                 key={imageUrl[0]}
                 role="button"
                 tabIndex={0}
-                className="info-container_gallery_photos_img-container"
+                className={styles['info-container_gallery_photos_img-container']}
                 onClick={() => {
                   handleImageClick(imageUrl[1]);
                 }}
@@ -323,7 +323,7 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
                 }}
               >
                 <img
-                  className="info-container_gallery_photos_img"
+                  className={styles['info-container_gallery_photos_img']}
                   src={imageUrl[1]}
                   alt={`${nickname} ${i}`}
                 />
@@ -361,17 +361,17 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
             );
           })}
           {showEditForm && (
-            <label htmlFor="file-input" className="info-container_gallery_photos_img-container">
+            <label htmlFor="file-input" className={styles['info-container_gallery_photos_img-container']}>
               <input
                 id="file-input"
                 type="file"
                 multiple
                 onChange={handleFilesUploadOnChange}
-                className="file-input"
+                className={styles['file-input']}
               />
               {!isImageLoading.includes('add new photo\'s') && (
                 <img
-                  className="info-container_gallery_photos_img"
+                  className={styles['info-container_gallery_photos_img']}
                   src={addImage}
                   alt="plus button"
                 />
@@ -413,8 +413,8 @@ export const HeroInfo: React.FC<Props> = React.memo(({ hero, onModalClose, onDat
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
       >
-        <div className="modal-photo">
-          <img className="modal-photo_image" src={selectedImage} alt="Selected" />
+        <div className={styles['modal-photo']}>
+          <img className={styles['modal-photo_image']} src={selectedImage} alt="Selected" />
         </div>
       </Modal>
     </div>

@@ -1,40 +1,80 @@
-import { Superhero } from "../models/superhero";
+import { Superhero } from '../models/superhero'
 
-const getAll = () => Superhero.findAll().catch((error) => {
-    throw new Error(`Failed to get all heroes: ${error.message}`);
-  });
+// const getAll = async () => await Superhero.findAll().catch((error: Error) => {
+//   throw new Error(`Failed to get all heroes: ${error.message}`)
+// })
 
-const getById = (heroId: number) => Superhero.findByPk(heroId).catch((error) => {
-    throw new Error(`Failed to get hero by ID: ${error.message}`);
-  });
+const getAll = async (): Promise<Superhero[]> => {
+  return await Superhero.findAll().catch((error: Error) => {
+    throw new Error(`Failed to get all heroes: ${error.message}`)
+  })
+}
+// const getById = async (heroId: number) => await Superhero.findByPk(heroId).catch((error: Error) => {
+//   throw new Error(`Failed to get hero by ID: ${error.message}`)
+// })
 
-const addHero = (newHero: Partial<Superhero>) => Superhero.findOrCreate({
+const getById = async (heroId: number): Promise<Superhero | null> => {
+  return await Superhero.findByPk(heroId).catch((error: Error) => {
+    throw new Error(`Failed to get hero by ID: ${error.message}`)
+  })
+}
+
+// const addHero = async (newHero: Partial<Superhero>) => await Superhero.findOrCreate({
+//   where: { nickname: newHero.nickname },
+//   defaults: newHero
+// }).catch((error: Error) => {
+//   throw new Error(`Failed to add hero: ${error.message}`)
+// })
+
+const addHero = async (newHero: Partial<Superhero>): Promise<[Superhero, boolean]> => {
+  return await Superhero.findOrCreate({
     where: { nickname: newHero.nickname },
-    defaults: newHero,
-  }).catch((error) => {
-    throw new Error(`Failed to add hero: ${error.message}`);
-  });
+    defaults: newHero
+  }).catch((error: Error) => {
+    throw new Error(`Failed to add hero: ${error.message}`)
+  })
+}
 
-const removeHero = (heroId: number) => Superhero.destroy({
-    where: {
-      id: heroId,
-    },
-  }).catch((error) => {
-    throw new Error(`Failed to remove hero: ${error.message}`);
-  });
+// const removeHero = async (heroId: number) => await Superhero.destroy({
+//   where: {
+//     id: heroId
+//   }
+// }).catch((error: Error) => {
+//   throw new Error(`Failed to remove hero: ${error.message}`)
+// })
 
-const updateHero = (heroId: number, newValues: Partial<Superhero>) => Superhero.update(newValues, {
+const removeHero = async (heroId: number): Promise<number> => {
+  return await Superhero.destroy({
     where: {
-      id: heroId,
-    },
-  }).catch((error) => {
-    throw new Error(`Failed to update hero: ${error.message}`);
-  });
+      id: heroId
+    }
+  }).catch((error: Error) => {
+    throw new Error(`Failed to remove hero: ${error.message}`)
+  })
+}
+// const updateHero = async (heroId: number, newValues: Partial<Superhero>) => await Superhero.update(newValues, {
+//   where: {
+//     id: heroId
+//   }
+// }).catch((error: Error) => {
+//   throw new Error(`Failed to update hero: ${error.message}`)
+// })
+const updateHero = async (heroId: number, newValues: Partial<Superhero>): Promise<number> => {
+  const [affectedCount] = await Superhero.update(newValues, {
+    where: {
+      id: heroId
+    }
+  }).catch((error: Error) => {
+    throw new Error(`Failed to update hero: ${error.message}`)
+  })
+
+  return affectedCount
+}
 
 export const heroService = {
   getAll,
   getById,
   addHero,
   removeHero,
-  updateHero,
-};
+  updateHero
+}

@@ -1,20 +1,21 @@
-import dotenv from 'dotenv';
-import { Sequelize } from "sequelize-typescript";
-import { Superhero } from "../models/superhero";
+/* eslint-disable */
+import dotenv from 'dotenv'
+import { Sequelize } from 'sequelize-typescript'
+import { Superhero } from '../models/superhero'
 
-dotenv.config();
+dotenv.config()
 
-const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
-const URL = `postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}`;
+const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env
 
-export const dbInit = () => {
+const URL = `postgres://${PGUSER || ''}:${PGPASSWORD || ''}@${PGHOST || ''}/${PGDATABASE || ''}`
+
+export const dbInit = (): Sequelize => {
   return new Sequelize(URL, {
     models: [Superhero],
     dialectOptions: {
       ssl: {
-        rejectUnauthorized: true,
-      },
-    },
-  });
+        rejectUnauthorized: true
+      }
+    }
+  })
 }
-
